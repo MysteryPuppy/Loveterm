@@ -1,8 +1,9 @@
 # :revolving_hearts: Love Term :airplane:
-Love term is terminal package for LDR couples to just make a few things easier, give you ideas, and add some more romance to your relationship
+Love term is terminal package for LDR couples to just make a few things easier, give you ideas, and add some more romance to your relationship. This is also my first attempt at making a pip package so some things might not be perfect. 
 
 ### Installation
 **Note:** Only runs on MacOS (as far as I know) and was developed in Python 2.7
+
 
 ```sh
 $ pip install loveterm
