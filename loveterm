@@ -33,7 +33,7 @@ elif len(sys.argv) < 2:
 else:
     #loveterm help
     if sys.argv[1]=="help":
-        print "\n HOW TO USE LOVETERM\n -------------------\n\n [DATES]\n\n   ♡ Type 'loveterm setdate' to log any important dates you want to save like meeting times\n   ♡ Type 'loveterm dates' to see all logged dates\n   ♡ Type 'loveterm countdown' to see how many days are left until those special moments!\n   ♡ Type 'loveterm delete' to delete logged dates\n\n [OTHER CUTE STUFF]\n\n   ♡ Type 'loveterm send' to send an email to your lover with a cute message!\n   ♡ Type 'loveTerm getsong' to get a romantic song from Michelle Obama's Valentines playlist\n   ♡ Type 'loveTerm getcute' to get an inspirational and cute message\n   ♡ Type 'loveTerm getidea' for a cute LDR-friendly date suggestion\n"
+        print "\n HOW TO USE LOVETERM\n -------------------\n\n [DATES]\n\n   ♡ Type 'loveterm setdate' to log any important dates you want to save like meeting times\n   ♡ Type 'loveterm dates' to see all logged dates\n   ♡ Type 'loveterm countdown' to see how many days are left until those special moments!\n   ♡ Type 'loveterm delete' to delete logged dates\n\n [OTHER CUTE STUFF]\n\n   ♡ Type 'loveterm send' to send an email to your lover with a cute message!\n   ♡ Type 'loveterm getsong' to get a romantic song from Michelle Obama's Valentines playlist\n   ♡ Type 'loveterm getcute' to get an inspirational and cute message\n   ♡ Type 'loveterm getidea' for a cute LDR-friendly date suggestion\n"
 
     #loveterm setdate
     elif sys.argv[1]=="setdate".lower():
@@ -76,7 +76,7 @@ else:
             while line:
                 print "   ♡ "+line
                 line = r.readline()
-            print("\n")
+            #print("\n")
             r.close()
         except IOError:
             print "   ♡ No dates are logged yet. Type 'loveterm setdate' to logdates\n"

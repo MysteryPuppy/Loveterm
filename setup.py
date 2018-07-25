@@ -8,7 +8,7 @@ setuptools.setup(
      description='A terminal package for LDR couples',
      author='lovebirdnest',
      author_email='sadpastelcutie@gmail.com',
-     version='0.1',
+     version='0.4',
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://github.com/lovebirdsnest/LoveTerm.git",
