@@ -1,0 +1,244 @@
+#!/usr/bin/python2
+# -*- coding: utf-8 -*-
+
+#----------------------------------
+#love terminal
+#by lovebirds to my loving bf <3
+#----------------------------------
+
+#imports
+#only works on macs as far as I know! O W O;
+import sys
+import re
+import datetime
+import time
+import random
+import os.path
+from os.path import expanduser
+#for searching websites
+import requests
+from bs4 import *
+import os
+
+import smtplib
+
+
+home = expanduser("~")
+
+#error catching
+if len(sys.argv) > 2:
+    print "\n   ♡ Too many arguments given\n"
+elif len(sys.argv) < 2:
+    print "\n   ♡ No arguments given. Type 'loveterm help' for help \n"
+else:
+    #loveterm help
+    if sys.argv[1]=="help":
+        print "\n HOW TO USE LOVETERM\n -------------------\n\n [DATES]\n\n   ♡ Type 'loveterm setdate' to log any important dates you want to save like meeting times\n   ♡ Type 'loveterm dates' to see all logged dates\n   ♡ Type 'loveterm countdown' to see how many days are left until those special moments!\n   ♡ Type 'loveterm delete' to delete logged dates\n\n [OTHER CUTE STUFF]\n\n   ♡ Type 'loveterm send' to send an email to your lover with a cute message!\n   ♡ Type 'loveTerm getsong' to get a romantic song from Michelle Obama's Valentines playlist\n   ♡ Type 'loveTerm getcute' to get an inspirational and cute message\n   ♡ Type 'loveTerm getidea' for a cute LDR-friendly date suggestion\n"
+
+    #loveterm setdate
+    elif sys.argv[1]=="setdate".lower():
+        if os.path.exists(home+"/loveTerm/dates.txt")==False:
+            print "\n   ♡ Creating file at ~/loveTerm/dates.txt to store dates..!"
+            #create a folder
+            try:
+                if not os.path.exists(home+"/loveTerm/"):
+                    os.makedirs(home+"/loveTerm/")
+            except OSError:
+                print ('\n   ♡ Error creating directory ' + home+"/loveTerm/")
+            f = open(home+"/loveTerm/dates.txt", "a+")
+        else:
+            f=open(home+"/loveTerm/dates.txt","a+")
+        #get user inputs
+        userstring=str(raw_input("\n   ♡ Enter the name of a special date: "))
+        userin=str(raw_input("   ♡ Enter a special date (DD-MM-YYYY): "))
+        bool=False
+        try:
+            datetime.datetime.strptime(userin, '%d-%m-%Y')
+            bool = True
+        except ValueError:
+            print("   ♡ The date was in the wrong format, can't log\n")
+            bool = False
+        if bool==True:
+            if "->" in userstring:
+                print "   ♡ Can't have '->' in name! Sorry ; w ;\n"
+            else:
+                f.write(userstring+" -> ")
+                f.write(userin+"\n")
+                print("   ♡ Date has been logged!\n")
+        f.close()
+
+    #loveterm dates
+    elif sys.argv[1]=="dates".lower():
+        print "\nThese are all the logged dates:\n"
+        try:
+            r = open(home+"/loveTerm/dates.txt")
+            line = r.readline()
+            while line:
+                print "   ♡ "+line
+                line = r.readline()
+            print("\n")
+            r.close()
+        except IOError:
+            print "   ♡ No dates are logged yet. Type 'loveterm setdate' to logdates\n"
+
+    #loveterm countdown
+    elif sys.argv[1]=="countdown".lower():
+        #current date
+        today = datetime.date.today()
+        print "\nThese are your upcoming dates:\n"
+        dates=[]
+        times=[]
+        counter3=0
+        try:
+            r = open(home+"/loveTerm/dates.txt")
+            line = r.readline()
+            linetosplit=line.split()
+            #AHHHHHHHHHHH
+            currentOne=datetime.date(int(linetosplit[-1].split("-")[2]),int(linetosplit[-1].split("-")[1]),int(linetosplit[-1].split("-")[0]))
+            if today<currentOne:
+                dates.append(line)
+                #find difference between dates
+                d1 = datetime.date(int(linetosplit[-1].split("-")[2]),int(linetosplit[-1].split("-")[1]),int(linetosplit[-1].split("-")[0]))
+                d2 = datetime.date.today()
+                result1 = abs(d2-d1).days
+                times.append('{} days between {} and {}'.format(result1, d1, d2))
+                print '{} days between {} and {}'.format(result1, d1, d2)
+            while line:
+                linetosplit=line.split()
+                currentOne=datetime.date(int(linetosplit[-1].split("-")[2]),int(linetosplit[-1].split("-")[1]),int(linetosplit[-1].split("-")[0]))
+                if today<currentOne:
+                    dates.append(line)
+                    #find difference between dates
+                    d1 = datetime.date(int(linetosplit[-1].split("-")[2]),int(linetosplit[-1].split("-")[1]),int(linetosplit[-1].split("-")[0]))
+                    d2 = datetime.date.today()
+                    result1 = abs(d2-d1).days
+                    times.append("There are "+str(result1)+" days left")
+                line = r.readline()
+            r.close()
+            if not dates:
+                print "   ♡ There are no upcoming dates...maybe you could make some!\n"
+            else:
+                for word in dates:
+                    print "   ♡ "+word+ " ["+times[counter3]+"]\n"
+                    counter3=counter3+1
+        except IOError:
+            print "   ♡ No dates are logged yet. Type 'loveterm setdate' to log dates\n"
+    #loveterm delete
+    elif sys.argv[1]=="delete".lower():
+        try:
+            counter=0
+            counter2=0
+            print "\nDelete a log by typing the corresponding number\n"
+            r = open(home+"/loveTerm/dates.txt")
+            line = r.readlines()
+            for i in line:
+                print "["+str(counter)+"] "+i
+                counter=counter+1
+            r.close()
+            if counter==0:
+                print("   ♡ No dates are logged yet. Type 'loveterm setdate' to log dates\n")
+            else:
+                deleteinput=raw_input("Number to delete: ")
+                if deleteinput.isdigit():
+                    if (int(deleteinput)>int(counter)) or (int(deleteinput) < 0):
+                        print "   ♡ This value is too big or too small...\n"
+                    else:
+                        r=open(home+"/loveTerm/dates.txt", "w")
+                        for word in line:
+                            if counter2!=int(deleteinput):
+                                r.write(word)
+                            counter2=counter2+1
+                        print("\n   ♡ Event has been deleted\n")
+                else:
+                    print "\n   ♡ The value you entered was not a digit\n"
+        except IOError:
+            print "   ♡ No dates are logged yet. Type 'loveterm setdate' to log dates\n"
+    #loveterm getsong
+    elif sys.argv[1]=="getsong".lower():
+        songlist=[]
+        sourceCode = requests.get("https://www.youtube.com/playlist?list=PL4i_O8RTIiq_VHtcLPWKBtQr6K_bZwjcx").text
+        soup = BeautifulSoup(sourceCode, 'html.parser')
+        domain = 'https://www.youtube.com'
+        for link in soup.find_all("a", {"dir": "ltr"}):
+            href = link.get('href')
+            if href.startswith('/watch?'):
+                songlist.append("\n   Romantic song: "+link.string.strip()+"\n   Link: "+domain + href + '\n')
+        print(random.choice(songlist))
+
+    #loveterm send
+    elif sys.argv[1]=="send".lower():
+        print "\n   ♡ Sending an adorable email to your partner ♡\n"
+        info=[]
+        if os.path.exists(home+"/loveTerm/email.txt")==False:
+            print "\n   ♡ Creating file at ~/loveTerm/email.txt to store your email information"
+            #create a folder
+            try:
+                if not os.path.exists(home+"/loveTerm/"):
+                    os.makedirs(home+"/loveTerm/")
+            except OSError:
+                print ('\n   ♡ Error creating directory ' + home+"/loveTerm/")
+
+            f = open(home+"/loveTerm/email.txt", "a+")
+            froma=raw_input("\n   ♡ Enter your email: ")
+            fromp=raw_input("\n   ♡ Enter your password: ")
+            toa=raw_input("\n   ♡ Enter your partner's email: ")
+            f.write(froma+"\n")
+            f.write(fromp+"\n")
+            f.write(toa+"\n")
+            f.close()
+            print "\n   ♡ File created! Please run the command again."
+        else:
+            try:
+                f = open(home+"/loveTerm/email.txt")
+                line = f.readline()
+                while line:
+                    info.append(line)
+                    line = f.readline()
+                f.close()
+            except IOError:
+                print "   ♡ Something went wrong, please inspect the file at ~/loveTerm/email.txt"
+
+        fromaddr =  info[0]
+        frompass =  info[1]
+        toaddrs  =  info[2]
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(fromaddr, frompass)
+
+        # create an email message with just a subject line,
+        header = """From: inLove <from@fromdomain.com>
+To: myLove <to@todomain.com>
+MIME-Version: 1.0
+Content-type: text/html
+Subject: I love you <3
+
+        """
+        messages=["<h2>To my love,</h2>I was just thinking about you and thought I'd let you know that I think you're <i>super</i> cute! I love you lots and lots and I can't wait to talk to you again soon.<br>Until later xoxo","<h2>To my darling,</h2>You're my most important treasure and every time I think about you I can't help but smile!<br>Hope to talk to you soon and remember that I love you <3", "<h2>To my treasure,</h2>Hopefully you're doing well in this time where  we can't really talk but know that I'm thinking about you a <i>whole</i> lot and I can't wait to talk with you again! Keep that smile on and remember how much I love you<br>Kisses and hugs~!","<h2>To my lovely partner,</h2>Did you know that I adore spending time with you most and never want to be without your wonderful personality?<br>You complete me, so much<br>Talk soons!!","<h2>To my cutie,</h2>You're so hecking cute and I hope that the world is treating you right while we're apart from eachother but do not fret for we shall probably play games later and talks a lot and stuff so be ready~!<br>Love you baby!!", "<h2>To you,</h2>You're the best thing to ever happen to my life and I love you so much<br>I can't wait to talk to you soon<br>Love, me<3"]
+
+        msg=header+random.choice(messages)
+        # Print the email's contents
+        print("   ♡ Message contents:\n")
+        print('From: ' + fromaddr)
+        print('To: ' + str(toaddrs))
+        print('Message: ' + msg)
+        print("\n   ♡ Message sent!\n")
+        # send the email
+        server.sendmail(fromaddr, toaddrs, msg)
+        #disconnect from the server
+        server.quit()
+
+    #loveterm getcute
+    #QUOTES TAKEN FROM: https://www.modernlovelongdistance.com/long-distance-relationship-quotes-best/
+    elif sys.argv[1]=="getcute".lower():
+        print("\n   ♡ Someone has come by to tell you something ♡ \n")
+        cutelist=["   (^u w u^)/ How lucky I am to have something that makes saying goodbye so hard.\n   -A.A. Milne, Winnie-the-Pooh", "   U(o w o)U The best and most beautiful things in the world cannot be seen or even touched. They must be felt with the heart.\n   -Helen Keller", "   |(u x u )| If love cannot stand the test of time, then it has failed the test of love.\n   -Bernard Byer", "   (=^ ◡ ^=) When your absence is felt, your presence is the essence and it makes a difference.\n   -Michael Bassey Johnson","   ʕ •ᴥ• ʔ And ever has it been known that love knows not its own depth until the hour of separation.\n   -Khalil Gibran","   ∪･ω･∪ Love is what you’ve been through with somebody.\n   -James Thurber","   ∪･ｪ･∪ You have to go wholeheartedly into anything in order to achieve anything worth having.\n   -Frank Lloyd Wright","   ʕ ᵔᴥᵔ ʔ Definition of a long distance relationship: 'Inconveniently the most effective way to find out if you really love each other.'\n   -unknown","   (･θ･) But I must admit, I miss you quite terribly. The world is too quiet without you nearby.\n   -Lemony Snicket", "   (づ ◕‿◕ )づ Long distance relationships are hard, but they’re also incredible. If you can love, trust, respect, and support each other from a distance then you’ll be unstoppable once you’re physically together.\n   -unknown","   (⊃｡•́‿•̀｡)⊃ Everything will be okay in the end. If it’s not okay, then it’s not the end.\n   -Ed Sheeran","   (o^ ^o)/ In many ways, the art of love is largely the art of persistence.\n   -Albert Ellis", "   (o´ω`o)ﾉ If distance were measured in terms of the heart we’d never be more than a minute apart.\n   -unknown","   ヽ(´ー` ) Your absence has not taught me how to be alone, it merely has shown that when together we cast a single shadow on the wall.\n   -Doug Fetherling","   (*ﾉ∀`*) I knew when I met you an adventure was going to happen.\n   -A.A. Milne - Winnie The Poo", "   (´• ω •`) Being close is the first and last desire of lovers, but being far and loving each other without an inch’s difference is the characteristic of real love.\n   -Senora Ray", "   (*ﾉωﾉ) Life has taught us that love does not consist in gazing at each other but in looking outward together in the same direction.\n   -Saint-Exupery", "   (*´︶`*) Love will travel as far as you let it. It has no limits.\n   -Dee King", "   (o^ ^o) Love is missing someone whenever you’re apart, but somehow feeling warm inside because you’re close in heart.\n   -Kay Knudson", "   ( ´ ∀ `)ノ I love you because the entire universe conspired to help me find you.\n   -Elizabeth Barrett Browning", "   (*^^*) I love you not only for what you are, but for what I am when I am with you.\n   -Albert Einstein", "   (´･ᴗ･ ` ) I wonder why people still underestimate the authenticity of long distance relationships. I fell in love with his soul before I could even touch his skin. If that isn’t true love, then please tell me what is.\n   -unknown", "   (๑˃ᴗ˂)ﻭ Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.\n   -Lao Tzu", "   (っ˘з(˘⌣˘ ) I exist in two places, here and where you are.\n   -Margaret Atwood"]
+        print(random.choice(cutelist)+"\n")
+    #loveterm getidea
+    elif sys.argv[1]=="getidea".lower():
+        print("\n   ♡ Here is a LDR activity suggestion ♡ \n")
+        cuteactivites=["   Use www.rabb.it to watch your favorite youtube videos and movies together", "   Download multiplayer games on steam like Stardew Valley, Terraria, and Minecraft", "   Play some MOBAs or MMOs together like Dota, LoL, GoW, Blade&Soul and many more","   Take some relationship and friendship quizzes online to see how well you guys know eachother", "   Download a visual novel or story-rich game and screenshare (on Skype or Discord) so that both of you can enjoy it", "   Set up a date where you both get some food and then turn on cam so that it's like you're eating together", "   Listen to songs on Spotify together or hang out in a discord server with a music bot so that you can hear the song at the same time. It's romantic!", "   Make your partner a playlist of romantic or good songs on Youtube or Spotify and then share it with them", "   Get your partner to read to you or just read a book together and then talk about it! It's always good to learn and then have good discussions with the one you love", "   Download cute couple apps on your phone like Couplete, NUJJ, LokLok, Kindu, Happy Couple, etc", "   Study with your partner. This might sound dull but if you both turn on your cams while you work, it feels a lot less lonely when you have to do not-so-fun things", "   Send eachother silly photos or request a photo you want from your partner and they get to ask the same", "   Ask your partner how their day was, how they've been feeling overall recently, how they're feeling about your relationshp, how you could make their everyday better. It's the small questions and things that really build a solid relationship", "    Google 'flower shops in [place where your partner lives]' and see if they do deliveries" , "   Make a list of what kinds of things you'd like to do during your next visit together", "   Tell them you love them", "   Facetime while you sleep, it'll make you feel a lot less alone"]
+        print("\n"+random.choice(cuteactivites)+"\n")
+    #if not a command
+    else:
+        print "\n    ♡ I don't know that command. Type 'loveterm help' for help ♡\n"
