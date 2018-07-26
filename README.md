@@ -31,6 +31,11 @@ beautifulsoup4==4.6.0
   - Type `loveTerm getsong` to get a romantic song from Michelle Obama's Valentines playlist
   - Type `loveTerm getcute` to get an inspirational and cute message
   - Type `loveTerm getidea` for a cute LDR-friendly date suggestion
+  
+  ## Todo lists: 
+  
+- [ ] Make a time difference command 
+- [x] Make getcute and getidea
 
 License
 ----
