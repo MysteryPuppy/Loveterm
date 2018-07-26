@@ -16,7 +16,7 @@ beautifulsoup4==4.6.0
 ```
 
 
-## Commands:
+### Commands:
 
 ##### For Dates:
 
@@ -32,10 +32,10 @@ beautifulsoup4==4.6.0
   - Type `loveTerm getcute` to get an inspirational and cute message
   - Type `loveTerm getidea` for a cute LDR-friendly date suggestion
   
-  ## Todo lists: 
+  ### Todo lists: 
   
-- [ ] Make a time difference command 
-- [x] Make getcute and getidea
+- [ ] Make `diff` command that shows what time it is by your partner 
+- [x] Make `getcute` and `getidea`
 
 License
 ----
